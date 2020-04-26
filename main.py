@@ -14,6 +14,7 @@
    limitations under the License.
 """
 
+from manager.configuration import gc_conf
 from manager.ce_adapter import DockerAdapter
 from manager.manager import GCManager
 
@@ -22,4 +23,6 @@ ce_adapter = DockerAdapter()
 
 gc_manager = GCManager(ce_adapter)
 
-gc_manager.initGateway()
+if not gc_conf.GCM.initiated:
+    gc_manager.initGateway()
+    gc_conf.GCM.initiated = True
