@@ -38,8 +38,8 @@ class GCConf:
     class CE:
         socket = "unix://var/run/docker.sock"
         network_name = "gateway-network"
-        subnet = "10.20.0.0/16",
-        ip_range = "10.20.0.0/24",
+        subnet = "10.20.0.0/16"
+        ip_range = "10.20.0.0/24"
         gateway = "10.20.0.1"
 
     @simple_conf.section
@@ -66,4 +66,4 @@ user_dir = '{}/storage'.format(os.getcwd())
 if not os.path.exists(user_dir):
     os.makedirs(user_dir)
 
-gc_conf = GCConf("gc", user_dir, ext_aft_crt=False)
+gc_conf = GCConf("gc", user_dir)
