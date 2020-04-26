@@ -19,7 +19,7 @@ __all__ = ("GCManager", )
 
 from .logger import getLogger
 from .configuration import gc_conf
-from .ce_adapter import DockerAdapter, CEAdapterError
+from .ce_adapter import DockerAdapter, CEAdapterError, ContainerState
 from .util import getLocalIP
 import requests
 import time
@@ -44,18 +44,24 @@ class GCManager:
                 response = requests.get("{}://{}/{}/{}".format(gc_conf.CR.scheme, gc_conf.CR.host, gc_conf.CR.api, gc_conf.CR.cc_id))
                 if response.status_code == 200:
                     data = response.json()
+                    containers = self.__ce_adapter.listContainers()
                     for service in data["services"]:
-                        self.__ce_adapter.createContainer(
-                            service["name"],
-                            service["deployment_configs"],
-                            service["service_configs"],
-                            {
-                                "GATEWAY_LOCAL_IP": getLocalIP(gc_conf.CR.host),
-                                "COMPONENT_ID": gc_conf.CR.cc_id
-                            }
-                        )
+                        if service["name"] not in containers:
+                            logger.info("creating '{}' ...".format(service["name"]))
+                            self.__ce_adapter.createContainer(
+                                service["name"],
+                                service["deployment_configs"],
+                                service["service_configs"],
+                                {
+                                    "GATEWAY_LOCAL_IP": getLocalIP(gc_conf.CR.host),
+                                    "COMPONENT_ID": gc_conf.CR.cc_id
+                                }
+                            )
+                    containers = self.__ce_adapter.listContainers()
                     for service in data["services"]:
-                        self.__ce_adapter.startContainer(service["name"])
+                        if containers[service]["state"] == ContainerState.stopped:
+                            logger.info("starting '{}' ...".format(service["name"]))
+                            self.__ce_adapter.startContainer(service["name"])
                     break
                 logger.error("could not query component registry - {}".format(response.status_code))
                 time.sleep(10)
