@@ -45,11 +45,11 @@ class GCManager:
                 if response.status_code == 200:
                     data = response.json()
                     containers = self.__ce_adapter.listContainers()
-                    for service in data["services"]:
-                        if service["name"] not in containers:
-                            logger.info("creating '{}' ...".format(service["name"]))
+                    for name, service in data["services"].items():
+                        if name not in containers:
+                            logger.info("creating '{}' ...".format(name))
                             self.__ce_adapter.createContainer(
-                                service["name"],
+                                name,
                                 service["deployment_configs"],
                                 service["service_configs"],
                                 {
@@ -58,10 +58,10 @@ class GCManager:
                                 }
                             )
                     containers = self.__ce_adapter.listContainers()
-                    for service in data["services"]:
-                        if containers[service["name"]]["state"] == ContainerState.stopped:
-                            logger.info("starting '{}' ...".format(service["name"]))
-                            self.__ce_adapter.startContainer(service["name"])
+                    for name in data["services"]:
+                        if containers[name]["state"] == ContainerState.stopped:
+                            logger.info("starting '{}' ...".format(name))
+                            self.__ce_adapter.startContainer(name)
                     break
                 logger.error("could not query component registry - {}".format(response.status_code))
                 time.sleep(10)
