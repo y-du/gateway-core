@@ -144,7 +144,7 @@ class DockerAdapter(Interface):
                 if srv_conf:
                     params["environment"] = srv_conf
             if name in gc_conf.GCM.whitelist.split(";"):
-                dm = {gc_conf.CE.socket.split("/", 1): {"bind": gc_conf.CE.socket.split("/", 1), "mode": "rw"}}
+                dm = {gc_conf.CE.socket.split("/", 1)[-1]: {"bind": gc_conf.CE.socket.split("/", 1)[-1], "mode": "rw"}}
                 if "volumes" not in params:
                     params["volumes"] = dm
                 else:
