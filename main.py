@@ -23,6 +23,4 @@ ce_adapter = DockerAdapter()
 
 gc_manager = GCManager(ce_adapter)
 
-if not gc_conf.GCM.initiated:
-    gc_manager.initGateway()
-    gc_conf.GCM.initiated = True
+gc_manager.initGateway()
