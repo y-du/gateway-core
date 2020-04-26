@@ -54,6 +54,8 @@ class GCManager:
                                 "COMPONENT_ID": gc_conf.CR.cc_id
                             }
                         )
+                    for service in data["services"]:
+                        self.__ce_adapter.startContainer(service["name"])
                     break
                 logger.error("could not query component registry - {}".format(response.status_code))
                 time.sleep(10)
