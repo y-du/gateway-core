@@ -58,3 +58,7 @@ class Interface(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def removeContainer(self, name: str, purge: bool = False) -> None:
         pass
+
+    @abc.abstractmethod
+    def initNetwork(self) -> None:
+        pass
