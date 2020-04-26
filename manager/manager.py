@@ -59,7 +59,7 @@ class GCManager:
                             )
                     containers = self.__ce_adapter.listContainers()
                     for service in data["services"]:
-                        if containers[service]["state"] == ContainerState.stopped:
+                        if containers[service["name"]]["state"] == ContainerState.stopped:
                             logger.info("starting '{}' ...".format(service["name"]))
                             self.__ce_adapter.startContainer(service["name"])
                     break
