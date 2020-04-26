@@ -51,7 +51,6 @@ class GCConf:
 
     @simple_conf.section
     class GCM:
-        initiated = False
         whitelist = None
 
     @simple_conf.section
@@ -66,4 +65,4 @@ user_dir = '{}/storage'.format(os.getcwd())
 if not os.path.exists(user_dir):
     os.makedirs(user_dir)
 
-gc_conf = GCConf("gc", user_dir)
+gc_conf = GCConf("gc.conf", user_dir)
