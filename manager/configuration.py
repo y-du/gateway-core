@@ -46,8 +46,8 @@ class GCConf:
     class CR:
         scheme = "http"
         host = None
-        api = "components"
-        cc_id = None
+        api = "modules"
+        gc_id = None
 
     @simple_conf.section
     class GCM:

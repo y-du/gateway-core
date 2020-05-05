@@ -41,7 +41,7 @@ class GCManager:
         try:
             self.__ce_adapter.initNetwork()
             while True:
-                response = requests.get("{}://{}/{}/{}".format(gc_conf.CR.scheme, gc_conf.CR.host, gc_conf.CR.api, gc_conf.CR.cc_id))
+                response = requests.get("{}://{}/{}/{}".format(gc_conf.CR.scheme, gc_conf.CR.host, gc_conf.CR.api, gc_conf.CR.gc_id))
                 if response.status_code == 200:
                     data = response.json()
                     containers = self.__ce_adapter.listContainers()
@@ -54,7 +54,7 @@ class GCManager:
                                 service["service_configs"],
                                 {
                                     "GATEWAY_LOCAL_IP": getLocalIP(gc_conf.CR.host),
-                                    "COMPONENT_ID": gc_conf.CR.cc_id
+                                    "MODULE_ID": gc_conf.CR.gc_id
                                 }
                             )
                     containers = self.__ce_adapter.listContainers()
@@ -63,9 +63,9 @@ class GCManager:
                             logger.info("starting '{}' ...".format(name))
                             self.__ce_adapter.startContainer(name)
                     break
-                logger.error("could not query component registry - {}".format(response.status_code))
+                logger.error("could not query module registry - {}".format(response.status_code))
                 time.sleep(10)
         except KeyError as ex:
-            criticalExit("initializing gateway failed - could not parse response from component registry - {}".format(ex))
+            criticalExit("initializing gateway failed - could not parse response from module registry - {}".format(ex))
         except CEAdapterError as ex:
             criticalExit("initializing gateway failed - {}".format(ex))
